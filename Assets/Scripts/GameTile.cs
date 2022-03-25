@@ -1,8 +1,25 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Wunderwunsch.HexMapLibrary;
 using Wunderwunsch.HexMapLibrary.Generic;
 public class GameTile {
+
+    public static Random random = new Random();
+    public static Type RandomLandType() {
+        Type[] landTypes = {
+            Type.DESERT,
+            Type.FIELD,
+            Type.FOREST,
+            Type.HILL,
+            Type.MOUNTAIN,
+            Type.PASTURE
+        };
+
+        int index = random.Next(landTypes.Length);
+        return landTypes[index];
+    }
+
     public enum Type {
         DESERT = 0,
         FIELD = 1,
@@ -20,6 +37,10 @@ public class GameTile {
     public GameTile(Type type, int produceOn) {
         this.type = type;
         this.produceOn = produceOn;
+    }
+
+    public bool IsLand() {
+        return type != Type.OCEAN;
     }
 }
 

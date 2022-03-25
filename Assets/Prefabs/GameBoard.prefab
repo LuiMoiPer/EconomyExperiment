@@ -44,6 +44,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: 7952002700720242692, guid: a8e7be83e3a1e5a0cb59a6182cafd549, type: 3}
+  villagePrefab: {fileID: 7521187356756749789, guid: fc56dc847204ba7e4bbd1c2949ae58c1, type: 3}
+  townPrefab: {fileID: 3695241519452697232, guid: 0e469c9042e0981c7b8e77bfc30d180b, type: 3}
+  roadPrefab: {fileID: 8164896379297865606, guid: 81b80eebc6ac14047946cfe3c5578778, type: 3}
   size: 3
   tileMaterials:
   - {fileID: 2100000, guid: 19a163541251bc8af822739a77a668ce, type: 2}
