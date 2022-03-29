@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Wunderwunsch.HexMapLibrary;
 using Wunderwunsch.HexMapLibrary.Generic;
+
 public class Settlement {
 
     public enum Type {
@@ -12,43 +13,13 @@ public class Settlement {
         TOWN = 2
     }
 
-    public enum Resource {
-        BRICK,
-        GRAIN,
-        LUMBER,
-        ORE,
-        WOOL
-    }
-
     public Type type {get; private set;}
-    public Dictionary<Resource, int> resources {get; private set;}
-
-    public static String ResourceToString(Resource resource) {
-        switch (resource) {
-            case Resource.BRICK:
-            return "Brick";
-
-            case Resource.GRAIN:
-            return "Grain";
-
-            case Resource.LUMBER:
-            return "Lumber";
-
-            case Resource.ORE:
-            return "Ore";
-
-            case Resource.WOOL:
-            return "Wool";
-
-            default:
-            throw new ArgumentException();
-        }
-    }
+    public Dictionary<Resource.Type, int> resources {get; private set;}
 
     public Settlement() {
         type = Type.NONE;
-        resources = new Dictionary<Resource, int>();
-        foreach (Resource resource in Enum.GetValues(typeof(Resource))) {
+        resources = new Dictionary<Resource.Type, int>();
+        foreach (Resource.Type resource in Enum.GetValues(typeof(Resource.Type))) {
             resources.Add(resource, 0);
         }
     }
@@ -58,11 +29,15 @@ public class Settlement {
     }
 
     public void ProduceResource(Resource resource) {
+        if (resource == null) {
+            return;
+        }
+
         if (type == Type.VILLAGE) {
-            resources[resource] += 1;
+            resources[resource.type] += 1;
         }
         else if (type == Type.TOWN) {
-            resources[resource] += 2;
+            resources[resource.type] += 2;
         }
 
         PrintResources();
@@ -73,14 +48,14 @@ public class Settlement {
             throw new ArgumentException();
         }
 
-        resources[resource] += amount;
+        resources[resource.type] += amount;
     }
 
     private void PrintResources() {
         String output = "";
 
         foreach (var resource in resources.Keys) {
-            output += ResourceToString(resource);
+            output += resource.ToString();
             output += ": ";
             output += resources[resource];
             output += "\n";

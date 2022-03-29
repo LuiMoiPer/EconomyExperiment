@@ -69,34 +69,12 @@ public class GameBoard : MonoBehaviour {
     }
 
     private void TriggerSettlementProduction(Tile<GameTile> tile) {
-        Settlement.Resource resource = Settlement.Resource.GRAIN;
-        switch (tile.Data.type) {
-            case GameTile.Type.FIELD:
-                resource = Settlement.Resource.GRAIN;
-                break;
-            
-            case GameTile.Type.FOREST:
-                resource = Settlement.Resource.LUMBER;
-                break;
-            
-            case GameTile.Type.HILL:
-                resource = Settlement.Resource.BRICK;
-                break;
-
-            case GameTile.Type.MOUNTAIN:
-                resource = Settlement.Resource.ORE;
-                break;
-
-            case GameTile.Type.PASTURE:
-                resource = Settlement.Resource.WOOL;
-                break;
-        }
+        Resource resource = Utils.TileToResouce(tile.Data);
 
         foreach (Corner<Settlement> corner in hexMap.GetCorners.OfTile(tile)) {
             if (corner.Data.type == Settlement.Type.NONE) {
                 continue;
             }
-
             corner.Data.ProduceResource(resource);
         }
     }
@@ -181,6 +159,7 @@ public class GameBoard : MonoBehaviour {
 
     private void AddRandomSettlement() {
         if (validSettlementLocations.Count == 0) {
+            Debug.Log("No valid settlement placement locations.");
             return;
         }
 
@@ -209,6 +188,7 @@ public class GameBoard : MonoBehaviour {
 
     private void AddRandomRoad() {
         if (validRoadLocations.Count == 0) {
+            Debug.Log("No valid road placement locations.");
             return;
         }
 
