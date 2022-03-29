@@ -64,18 +64,7 @@ public class GameBoard : MonoBehaviour {
         }
 
         foreach (Tile<GameTile> tile in tilesByProductionNumber[number]) {
-            TriggerSettlementProduction(tile);
-        }
-    }
-
-    private void TriggerSettlementProduction(Tile<GameTile> tile) {
-        Resource resource = Utils.TileToResouce(tile.Data);
-
-        foreach (Corner<Settlement> corner in hexMap.GetCorners.OfTile(tile)) {
-            if (corner.Data.type == Settlement.Type.NONE) {
-                continue;
-            }
-            corner.Data.ProduceResource(resource);
+            tile.Data.Produce(number);
         }
     }
 
@@ -166,12 +155,13 @@ public class GameBoard : MonoBehaviour {
         Corner<Settlement>[] emptyCorners = new Corner<Settlement>[validSettlementLocations.Count];
         validSettlementLocations.CopyTo(emptyCorners);
         Corner<Settlement> corner = emptyCorners[Random.Range(0, emptyCorners.Length)];
-        RemoveFromValidLovations(corner);
-        UpdateValidRoadLocations(corner);
+        RemoveFromValidLocations(corner);
 
         cornerBySettlementType[Settlement.Type.NONE].Remove(corner);
         corner.Data.SetType(Settlement.Type.VILLAGE);
         AddToCornerDictionary(corner);
+        AddToTileSettlements(corner);
+        UpdateValidRoadLocations(corner);
 
         GameObject settlementInstance = GameObject.Instantiate(villagePrefab);
         settlementInstance.name = "" + corner.Index;
@@ -179,7 +169,7 @@ public class GameBoard : MonoBehaviour {
         settlementInstance.transform.parent = settlementParent;
     }
 
-    private void RemoveFromValidLovations(Corner<Settlement> corner) {
+    private void RemoveFromValidLocations(Corner<Settlement> corner) {
         List<Corner<Settlement>> toRemove = hexMap.GetCorners.AdjacentToCorner(corner);
         toRemove.Add(corner);
 
@@ -244,5 +234,12 @@ public class GameBoard : MonoBehaviour {
             }
         }
         return false;
+    }
+
+    private void AddToTileSettlements(Corner<Settlement> corner) {
+        List<Tile<GameTile>> adjacentTiles = hexMap.GetTiles.AdjacentToCorner(corner);
+        foreach (var tile in adjacentTiles) {
+            tile.Data.AddSettlement(corner.Data);
+        }
     }
 }
