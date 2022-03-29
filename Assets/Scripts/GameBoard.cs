@@ -16,7 +16,6 @@ public class GameBoard : MonoBehaviour {
 
     [SerializeField] int size = 4;
     HexMap<GameTile, bool, Settlement> hexMap;
-    Dictionary<int, List<Tile<GameTile>>> tilesByProductionNumber = new Dictionary<int, List<Tile<GameTile>>>();
     Dictionary<Settlement.Type, HashSet<Corner<Settlement>>> cornerBySettlementType = new Dictionary<Settlement.Type, HashSet<Corner<Settlement>>>();
     Dictionary<bool, HashSet<Edge<bool>>> edgesByExistingRoad = new Dictionary<bool, HashSet<Edge<bool>>>();
     List<Tile<GameTile>> landTiles = new List<Tile<GameTile>>();
@@ -59,11 +58,7 @@ public class GameBoard : MonoBehaviour {
     }
 
     public void Produce(int number) {
-        if (tilesByProductionNumber.ContainsKey(number) == false) {
-            return;
-        }
-
-        foreach (Tile<GameTile> tile in tilesByProductionNumber[number]) {
+        foreach (Tile<GameTile> tile in hexMap.Tiles) {
             tile.Data.Produce(number);
         }
     }
@@ -80,7 +75,6 @@ public class GameBoard : MonoBehaviour {
                 Random.Range(1, 7) + Random.Range(1, 7)
             );
             tile.Data = gameTile;
-            AddTileToProductionDictionary(tile);
         }
 
         foreach (var tile in hexMap.GetTiles.Ring(Vector3Int.zero, size, 1)) {
@@ -126,15 +120,6 @@ public class GameBoard : MonoBehaviour {
             edgesByExistingRoad.Add(hasRoad, new HashSet<Edge<bool>>());
         }
         edgesByExistingRoad[hasRoad].Add(edge);
-    }
-
-    private void AddTileToProductionDictionary(Tile<GameTile> tile) {
-        GameTile gameTile = tile.Data;
-        if (tilesByProductionNumber.ContainsKey(gameTile.produceOn) == false) {
-            tilesByProductionNumber.Add(gameTile.produceOn, new List<Tile<GameTile>>());
-        }
-
-        tilesByProductionNumber[gameTile.produceOn].Add(tile);
     }
 
     private void MakeBoardVisuals() {
